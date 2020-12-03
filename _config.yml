@@ -4,6 +4,7 @@ theme: minima
 header_pages:
   - UserGuide.md
   - DeveloperGuide.md
+  - ProjectManagement.md
 
 markdown: kramdown
 
@@ -11,4 +12,4 @@ repository: "JyouJyou/bc-tech-documentation"
 github_icon: "images/github-icon.png"
 
 plugins:
-  - jemoji
+  - jekyll-feed
