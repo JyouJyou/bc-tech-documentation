@@ -106,3 +106,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ## **PERT chart**
 
 ![SDLC](../images/PERT.jpeg)
+
+## **Gantt chart**
+
+![SDLC](../images/Gantt.png)
