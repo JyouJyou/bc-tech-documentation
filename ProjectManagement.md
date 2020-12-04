@@ -57,7 +57,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | 2.2.1     | Modularize existing code into multiple components (refactoring) | 3 man hour | 1 man hour | 
 | 2.2.2     | Mock stored procedure set-up | 3 man hour | 1 man hour | 
 | 2.2.3     | Build backend Persistence Data structure (with stored procedure) | 2 man hour | 1 man hour | 
-| 2.2.4     | Build parser | 6 man hour | 2 man hour | 
+| 2.2.4     | Build parser and **Log strategy** | 6 man hour | 2 man hour | 
 | 2.2.5     | Build Bluewave auth handler and receiver APIs | 3 man hour | 1 man hour | 
 | 2.2.6     | Set up business logic component | 2 man hour | 1 man hour | 
 | 2.2.6     | Arrange and structure the backend APIs, web socket, and encryption flow | 6 man hour | 2 man hour | 
@@ -68,5 +68,22 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | 3.2     | Frontend re-design |  |  |   
 | 3.2.1     | Build state management structure (consider to include Redux) | 6 man hour | 2 man hour | 
 | 4       | Testing                                   |  | |   
-| 4.1     | Backend Unit testing -                                    |  | |  
-
+| 4.1     | Backend Unit Testing                       |  | |   
+| 4.1.1     | Auth component        | 1 man hour | 0.5 man hour |  
+| 4.1.2     | Parser component      | 4 man hour | 1 man hour |  
+| 4.1.1     | Persistence Layer component (test ORM)       | 2 man hour | 1 man hour |  
+| 4.1.3     | Logic component test with Mock Database, Parser Stub, Auth Stub, and Data Stubs  | 6 man hour | 2 man hour |  
+| 4.2     | Backend Integration Testing                       |  | |   
+| 4.2.1   | Database + Persistence Layer (set up -> execution -> expectation -> clear up)   | 6 man hour | 2 man hour | 
+| 4.2.2   | Bluewave component + Bluewave  | 2 man hour | 1 man hour |   
+| 4.2.3   | **Logic** + Persistence Layer + Parser + Auth + Bluewave | 2 man hour | 1 man hour |    
+| 4.2.4   | Backend API test | 6 man hour | 2 man hour |    
+| 4.3     | Frontend testing              | tbd | tbd |  
+| 5       | Deployment             | | |    
+| 5.1     | Set up Jenkins in JyouJyou Server (possibly Docker)    | 3 man hour | 1 man hour |
+| 5.2     | Set up Jenkins + Tomcat + Git CI/CD environment (including frontend and all other possible applications) | 6 man hour | 3 man hour |    
+| 6       | Log management system and configuration          |  |  |  
+| 6.1     | Log message parser         | 3 man hour | 1 man hour |   
+| 6.2     | Response distributor       | 6 man hour | 2 man hour |   
+| 6.3     | UI       | 6 man hour | 2 man hour |   
+| 6.4     | Unit testing for parser and distributor       | 4 man hour | 2 man hour |   
