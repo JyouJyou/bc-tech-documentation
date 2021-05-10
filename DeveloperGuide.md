@@ -45,9 +45,7 @@ The diagrams in this Developer Guide are colour coded according to the different
 
 ### **3.1. Information Collector**
 
-<p align="center">
-  <img src="images/InformationCollectorSequenceDiagram.png" width="450" />
-</p>
+![diagram-information-collector](images/InformationCollectorSequenceDiagram.png)
 
 
 
