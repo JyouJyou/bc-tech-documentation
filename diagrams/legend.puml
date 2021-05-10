@@ -1,0 +1,12 @@
+@startuml
+
+legend right
+    |Color| Type |
+    |<#F8CECC>| Controller|
+    |<#ffe066>| Logic|
+    |<#D5E8D4>| Model|
+    |<#DAE8FC>| Service|
+    |<#FFE6CC>| Storage|
+endlegend
+
+@enduml

@@ -1,0 +1,54 @@
+@startuml
+!include style.puml
+
+skinparam sequence {
+participantBorderColor #000000
+ArrowColor #000000
+ActorBorderColor #000000
+LifeLineBorderColor #000000
+LifeLineBackgroundColor #000000
+}
+
+skinparam sequenceBoxBorderColor #black
+
+Actor bluewave as bluewave USER_COLOR
+
+
+participant "EventController" as EventController CONTROLLER_COLOR
+participant "EventService" as EventService SERVICE_COLOR
+participant "EventParser" as EventParser LOGIC_COLOR
+
+
+Actor BC_TECH_FRONTEND as bc_tech_frontend USER_COLOR
+
+
+bluewave -> EventController : receive()
+activate EventController CONTROLLER_COLOR
+
+EventController -> EventService : extractEvents
+activate EventService SERVICE_COLOR
+EventService --> EventController : eventDocuments
+deactivate EventService
+
+loop eventDocuments
+    EventController -> EventService : generateFetchEventResponse(Document)
+    activate EventService SERVICE_COLOR
+    EventService -> EventParser : parse(Document)
+    activate EventParser LOGIC_COLOR
+    EventParser --> EventService : event
+    deactivate EventParser
+    EventService -> EventService : handleEvent(event)
+    activate EventService SERVICE_COLOR
+    deactivate EventService
+    EventService -> EventService : handleXYZEvent(xyzEvent)
+    activate EventService SERVICE_COLOR
+    deactivate EventService
+    EventService --> EventController : resultMap
+    deactivate EventService
+end
+
+EventController -> bc_tech_frontend
+deactivate EventController
+
+
+@enduml
