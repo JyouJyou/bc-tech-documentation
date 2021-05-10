@@ -47,5 +47,17 @@ The diagrams in this Developer Guide are colour coded according to the different
 
 ![diagram-information-collector](images/InformationCollectorSequenceDiagram.png)
 
+### **3.2. Blue Wave Connection Protocol (BWCP)**
+
+![BWCP-connection-success](images/BWCP-connection-success.png)
+
+![BWCP-connection-failure](images/BWCP-connection-failure.png)
+
+![BWCP-disconnection](images/BWCP-disconnection.png)
+
+
+
+
+
 
 
