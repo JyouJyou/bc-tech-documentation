@@ -1,52 +1,92 @@
 @startuml
 !include style.puml
 
-interface BwcpServer MODEL_COLOR
 
-package controllers {
+package bwcp {
+    interface Server FACADE_COLOR {
+        void onConnection(AuthPacket)
+        void onDisconnection(FinPacket)
+    }
+
+    class BwcpServer FACADE_COLOR {
+    }
+
+
     class EventController {
         ResponseEntity receive(String xmlContent)
     }
 
-}
+    package logic SERVICE_COLOR {
+        package parser SERVICE_COLOR {
+             interface AbstractParser SERVICE_COLOR {
+                Optional tryParse(Document)
+             }
+             package events SERVICE_COLOR {
+                class XYZEventParsers SERVICE_COLOR
+             }
 
-package logic {
-    package parser {
-        package events {
-            class XYZEventParsers
+             package responses SERVICE_COLOR {
+                 class XYZResponseParsers SERVICE_COLOR
+             }
         }
-        package responses {
-            class XYZResponseParsers
+
+        package services SERVICE_COLOR {
+            class MonitorResourceService SERVICE_COLOR
+            class SessionService SERVICE_COLOR
+        }
+
+        package managers SERVICE_COLOR {
+            class SessionManager SERVICE_COLOR {
+                void createSession(AuthPacket)
+                void deleteSession(FinPacket)
+            }
+        }
+
+    }
+
+    package models MODEL_COLOR {
+        package _events_ MODEL_COLOR {
+            interface Event MODEL_COLOR
+            class XYZEvent MODEL_COLOR
+        }
+        package _responses_ MODEL_COLOR {
+            interface Response MODEL_COLOR
+            class XYZResponse MODEL_COLOR
+        }
+        class BwcpSession MODEL_COLOR {
+            void start()
+            void stop()
+            void resume()
+            void isAlive()
         }
     }
+
+    package storage STORAGE_COLOR {
+        interface ClientStorage STORAGE_COLOR {
+            void addClient
+            String getBlueWaveTokenByAor(aor)
+            String getMonitorResourceByAor(aor)
+            boolean containsClient(aor)
+            void removeAllResourceByAor(aor)
+        }
+        class BwcpClientStorage STORAGE_COLOR
+    }
+
+
 }
 
-interface BwcpServer {
-Void connect(User user)
-ResponseEntity listen(String xmlContent)
-
-}
-
-
-
-
-
-List <|-- AbstractList
-Collection <|-- AbstractCollection
-
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
-}
-
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
-}
+BwcpServer .up.|> Server
+XYZEventParsers .up.|> AbstractParser
+XYZResponseParsers .up.|> AbstractParser
+XYZEvent .up.|> Event
+XYZResponse .up.|> Response
+BwcpSession .up.> SessionService
+BwcpSession .up.> MonitorResourceService
+BwcpSession .up.> ClientStorage
+XYZEventParsers .down.> XYZEvent
+XYZResponseParsers .down.> XYZResponse
+BwcpClientStorage .up.|> ClientStorage
+SessionManager ..> BwcpSession
+BwcpServer ..> SessionManager
 
 @enduml

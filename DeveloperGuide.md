@@ -40,6 +40,13 @@ The diagrams in this Developer Guide are colour coded according to the different
 
 ## **2. Architecture**
 
+### **2.11 Blue Wave Connection Protocol (BWCP) architecture**
+
+![BWCP-architecture](images/BWCP-architecture.png)
+
+
+
+
 
 ## **3. Implementation**
 
@@ -49,11 +56,23 @@ The diagrams in this Developer Guide are colour coded according to the different
 
 ### **3.2. Blue Wave Connection Protocol (BWCP)**
 
+#### 3.2.1 Connection-Success
+
 ![BWCP-connection-success](images/BWCP-connection-success.png)
+
+#### 3.2.2 Connection-Failure
 
 ![BWCP-connection-failure](images/BWCP-connection-failure.png)
 
+#### 3.2.3 BWCP connection sequence diagram
+
+![BWCP-connection-sequence-diagram](images/BWCP-connection-sequence-diagram.png)
+
+#### 3.2.4 Disconnection
+
 ![BWCP-disconnection](images/BWCP-disconnection.png)
+
+
 
 
 
