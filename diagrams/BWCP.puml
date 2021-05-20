@@ -1,0 +1,52 @@
+@startuml
+!include style.puml
+
+interface BwcpServer MODEL_COLOR
+
+package controllers {
+    class EventController {
+        ResponseEntity receive(String xmlContent)
+    }
+
+}
+
+package logic {
+    package parser {
+        package events {
+            class XYZEventParsers
+        }
+        package responses {
+            class XYZResponseParsers
+        }
+    }
+}
+
+interface BwcpServer {
+Void connect(User user)
+ResponseEntity listen(String xmlContent)
+
+}
+
+
+
+
+
+List <|-- AbstractList
+Collection <|-- AbstractCollection
+
+Collection <|- List
+AbstractCollection <|- AbstractList
+AbstractList <|-- ArrayList
+
+class ArrayList {
+Object[] elementData
+size()
+}
+
+enum TimeUnit {
+DAYS
+HOURS
+MINUTES
+}
+
+@enduml

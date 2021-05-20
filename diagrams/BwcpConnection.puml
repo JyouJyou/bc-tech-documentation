@@ -1,0 +1,79 @@
+@startuml
+!include style.puml
+
+skinparam sequence {
+participantBorderColor #000000
+ArrowColor #000000
+ActorBorderColor #000000
+LifeLineBorderColor #000000
+LifeLineBackgroundColor #000000
+}
+
+skinparam sequenceBoxBorderColor #black
+
+Actor BWCP_Client as client USER_COLOR
+
+
+participant "BwcpClient" as BC FACADE_COLOR
+participant "BwcpServer" as BS FACADE_COLOR
+participant "SessionManager" as SM LOGIC_COLOR
+participant "SessionService" as SS LOGIC_COLOR
+participant "MonitorResourceService" as MRS LOGIC_COLOR
+participant "BwcpClientStorage" as BCS STORAGE_COLOR
+participant "BwcpSession" as BSN MODEL_COLOR
+participant "Thread" as thread MODEL_COLOR
+
+client -> BC : new
+activate BC FACADE_COLOR
+BC --> client : bwcpClient
+deactivate BC
+
+client -> BC : connect(bwcpServer)
+activate BC FACADE_COLOR
+
+BC -> BS : onConnection(AUTH)
+activate BS FACADE_COLOR
+
+BS -> SM : createSession(AUTH)
+activate SM LOGIC_COLOR
+
+SM -> SS : createBwSession(AUTH)
+activate SS LOGIC_COLOR
+
+SS --> SM : bwToken
+deactivate SS
+SM -> SM : createBwcpSession(AUTH, bwToken)
+
+SM -> MRS : initUserMonitorResource(bwUsername, bwToken)
+activate MRS LOGIC_COLOR
+
+MRS --> SM : monitorResourceId
+deactivate MRS
+
+SM -> BCS : addClient(bwcpClient)
+activate BCS STORAGE_COLOR
+
+BCS --> SM
+deactivate BCS
+
+SM -> BSN : new BwcpSession(AUTH)
+activate BSN  MODEL_COLOR
+
+BSN -> BSN : start()
+BSN --> BSN
+
+BSN -> thread : run()
+activate thread MODEL_COLOR
+
+BSN --> SM
+deactivate BSN
+
+SM --> BS
+deactivate SM
+BS --> BC
+deactivate BS
+
+BC --> client
+deactivate BC
+
+@enduml
