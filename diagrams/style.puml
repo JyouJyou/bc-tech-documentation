@@ -29,7 +29,7 @@
 !define MODEL_COLOR_T4 #51000A
 
 !define STORAGE_COLOR #80dfff
-!define STORAGE_COLOR_T1 #EACB7A
+!define STORAGE_COLOR_T1 #ccf2ff
 !define STORAGE_COLOR_T2 #EDC520
 !define STORAGE_COLOR_T3 #806600
 !define STORAGE_COLOR_T2 #544400
@@ -90,4 +90,5 @@ skinparam DefaultTextAlignment center
 skinparam packageStyle Rectangle
 
 hide footbox
+
 

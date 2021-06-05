@@ -1,0 +1,342 @@
+@startuml
+
+!include style.puml
+
+scale 0.4
+hide circle
+hide class field
+hide class method
+skinparam classFontSize 12
+skinparam defaultFontSize 10
+skinparam classBorderThickness .5
+skinparam classBorderColor black
+!define REDUX_COLOR #ffff66
+
+skinparam class {
+    BackgroundColor STORAGE_COLOR
+    ArrowColor STORAGE_COLOR
+    BorderColor yellow
+}
+
+'Overview Structure
+class App {
+    1. router
+    2. set configuration - on component rendered
+    3. <b><color:red>refresh JWT token - authWorkerInstance - every 80 min</color></b>
+}
+
+class LogInPage
+class ClientProfile
+
+'LogInPage
+class LeftPanel
+class RightPanel {
+    1. <b><color:red>authenticate - /login</color></b>
+    2. set cookies on authentication success
+          -- authToken, username, traders
+    3. start refresh thread - <b><color:red>authWorkerInstance
+    4. <b><color:REDUX_COLOR>rightPanelSlice: authError, errorMessage</color></b>
+}
+
+'HomePage
+class HomePage {
+    1. Switch between tabs
+    2. tab information - pageUtils - pages
+}
+    class HomePageLayout
+        class SidebarTablet {
+            1. <b><color:REDUX_COLOR>homepageSlice: isSidebarOpen</color></b> -
+            used for phone version -
+            hide sidebar after click
+        }
+        class SidebarCom
+            class SidebarContent {
+                1. <b><color:REDUX_COLOR>homepageSlice: isSidebarOpen</color></b>
+                2. tab information - pageUtils - pages
+            }
+
+        class Topbar {
+            1. <b><color:red>log out - /user/logout
+            2. terminate refresh thread - <b><color:red>authWorkerInstance
+            3. <b><color:REDUX_COLOR>homepageSlice: isSidebarOpen
+        }
+        class WebSocketEventHandler
+
+    'HomePage Main Body
+    class ContactEditTab
+        class ContactEditTabLayout
+            class ClientListSection
+                class ClientListTitle
+                class ClientSearchbar {
+                    1. <b><color:REDUX_COLOR>contactEditTabSlice: searchStr
+                }
+                class ClientList {
+                    1. <b><color:red> fetch client list - /user/clients
+                    2. Filter based on <b><color:REDUX_COLOR>searchStr
+                    3. <b><color:REDUX_COLOR>contactEditTabSlice: searchStr, targetClient
+                }
+        class EditSection {
+            1. <b><color:red>fetch contacts for <b><color:REDUX_COLOR>targetClient</color></b><b><color:red> and store at <b><color:REDUX_COLOR>clientList
+            2. set <b><color:REDUX_COLOR>isUrlValid</color></b> based on fetch result
+            3. redirect to DefaultEditSection if <b><color:REDUX_COLOR>isUrlValid</color></b> = false
+            4. <b><color:REDUX_COLOR>contactEditTabSlice: targetClient, isUrlValid, clientList
+        }
+            class ClientIntro {
+                1. fetch target client name from url -
+                EditSection has made sure url must be valid
+                2. fetch target client info - avatar color from <b><color:REDUX_COLOR>clientList
+            }
+                class ClientAvatar
+            class ModeTogglePanel {
+                1. handle mode change through setting <b><color:REDUX_COLOR>mode
+                2. add contact by <b><color:REDUX_COLOR>addContactWithName
+                3. <b><color:REDUX_COLOR>contactEditTabSlice: mode
+                4. <b><color:REDUX_COLOR>contactsSectionSlice: addContactWithName
+            }
+            class ContactList {
+                1. reuse <b><color:red>Contacts</color></b> component
+            }
+        class DefaultEditSection
+    class UserManagementTab {
+        1. <b><color:red>fetch all users - /admin/trader</color></b> and store at <b><color:REDUX_COLOR>users
+        2. row information - userManagementUtils - userManagementInformationList
+        3. <b><color:REDUX_COLOR>userManagementSlice: users
+
+    }
+        class UserTableTogglePanel {
+            1. set <b><color:REDUX_COLOR>shouldOpenUserModal</color></b> on add button clicked
+            2. <b><color:REDUX_COLOR>userManagementSlice: shouldOpenUserModal
+        }
+        class UserToggleButtons {
+            1. update <b><color:REDUX_COLOR>users</color></b> based on operation
+            2. <b><color:red> save user to DB - /admin/user-update
+            2. <b><color:REDUX_COLOR>userManagementSlice: users
+        }
+        class UserTableRow {
+            1. user attributes - userManagementUtils - userManagementInformationList
+        }
+            class UserTableCellSelect {
+                1. edit {name} attribute of user with {id} in <b></color:REDUX_COLOR>users
+                2. <b><color:REDUX_COLOR>userManagementSlice: users
+            }
+            class UserTableCellInput {
+                1. edit {name} attribute of user with {id} in <b></color:REDUX_COLOR>users
+                2. <b><color:REDUX_COLOR>userManagementSlice: users
+            }
+            class Status
+        class AddNewUserModal {
+            1. open based on <b><color:REDUX_COLOR> shouldOpenUserModal
+            2. <b><color:REDUX_COLOR>userManagementSlice: shouldOpenUserModal
+        }
+            class AddNewUserModalBody {
+                1. <b><color:red>save new user to <b><color:REDUX_COLOR>users
+                2. <b><color:REDUX_COLOR>userManagementSlice: users
+            }
+    class AdvancedConfigPage {
+        1. tab information - configurationUtils - advancedConfigurationList
+        2. set <b><color:REDUX_COLOR>snippetType</color></b> based on tab clicked
+        3. <b><color:REDUX_COLOR>configurationPageSlice: snippetType
+    }
+        class ConfigTemplateEditSection {
+            1. <b><color:red>fetch template based on <b><color:REDUX_COLOR>snippetType</color></b> <b><color:red>- /admin/fetch-template
+            2. set <b><color:REDUX_COLOR>shouldBeautify</color></b> based on the state of view
+            3. <b><color:REDUX_COLOR>configurationPageSlice: snippetType, shouldBeautify
+        }
+        class VariableConfigSection {
+            1. variable information - configurationUtils - variablesOfConcern
+        }
+            class VariableConfigTemplate
+                class VariableTitle
+                class VariablePropertyEdit {
+                    1. <b><color:red>save variable based on variableIdx - admin/update-config-param
+                }
+
+class ClientProfile {
+    1. <b><color:red>authenticate on component rendered - /user/auth
+    2. set configuration - on component rendered
+    3. <b><color:red>fetch client profile data - /user/client-profile</color></b>
+    <b><color:red> and store at <b><color:REDUX_COLOR>contacts, clientData, tmuInfo, history
+    4. <b><color:REDUX_COLOR>contactsSectionSlice: contacts, cache, contactsInDb
+    5. <b><color:REDUX_COLOR>clientProfileSlice: clientData, tmuInfo, history
+}
+    class UnauthorizedPage
+    class ClientNotFoundPage
+    class ClientInfoHeader {
+        1. get client name from <b><color:REDUX_COLOR>clientData
+        2. <b><color:REDUX_COLOR>clientProfileSlice: clientData
+    }
+    class TMUandGeneralInfo
+        class Tmu {
+            1. get Tmu information from <b><color:REDUX_COLOR>tmuInfo
+            2. <b><color:REDUX_COLOR>clientProfileSlice: tmuInfo
+        }
+            class TmuAvatar
+            class Memo
+        class GeneralInfo {
+            1. select general information from <b><color:REDUX_COLOR>clientData
+            2. <b><color:REDUX_COLOR>clientProfileSlice: clientData
+        }
+    class Contacts {
+        1. show ToggleButtons based on "isEditable"
+        2. show ContactsTitle based on tab
+        3. contact attributes - contactsUtils - contactInformationList
+    }
+        class ContactsTitle {
+            1. Add new contact to <b><color:REDUX_COLOR>contacts
+            2. <b><color:REDUX_COLOR>contactsSectionSlice: contacts
+        }
+        class ToggleButtons {
+            1. Confirm button:
+            [a] check validity of inputs
+            [b] set <b><color:REDUX_COLOR>contact.editable to false
+            [c] set <b><color:REDUX_COLOR>contact.error to false
+            [d] update cache
+            2. Revert button:
+            [a] set <b><color:REDUX_COLOR>contact.editable to false
+            [b] revert <b><color:REDUX_COLOR>contacts</color></b> back to  <b><color:REDUX_COLOR>cache</color></b>
+            3. Edit button:
+            [a] set <b><color:REDUX_COLOR>contact.editable to true
+            4. Delete button:
+            [a] open delete alert
+        }
+        class ContactTableRow {
+            1. contact attribute - contactsUtils - contactInformationList
+        }
+            class ContactTableCellSelect {
+                1. update target contact by its {id}, {name} in <b><color:REDUX_COLOR>contacts
+                2. <b><color:REDUX_COLOR>contactsSectionSlice: contacts
+            }
+            class ContactTableCellInput {
+                1. update target contact by its {id}, {name} in <b><color:REDUX_COLOR>contacts
+                2. <b><color:REDUX_COLOR>contactsSectionSlice: contacts
+            }
+    class FinancialInfo {
+        1. financial info attributes - financialInfoUtils -
+        financialInformationList
+        2. get data from <b><color:REDUX_COLOR>clientData
+        3. <b><color:REDUX_COLOR>clientProfile: clientData
+    }
+    class History {
+        1. history attributes - historyUtils -
+        historyInformationList
+        2. get data from <b><color:REDUX_COLOR>history
+        3. <b><color:REDUX_COLOR>clientProfile: history
+    }
+    class RiskTable
+    class DayEndLimitReport
+
+show App field
+show RightPanel field
+show SidebarTablet field
+show SidebarContent field
+show Topbar field
+show ClientSearchbar field
+show ClientList field
+show EditSection field
+show ClientIntro field
+show ModeTogglePanel field
+show ContactList field
+show HomePage field
+show UserManagementTab field
+show UserTableTogglePanel field
+show UserToggleButtons field
+show UserTableRow field
+show UserTableCellInput field
+show UserTableCellSelect field
+show AddNewUserModal field
+show AddNewUserModalBody field
+show AdvancedConfigPage field
+show ConfigTemplateEditSection field
+show VariablePropertyEdit field
+show ClientInfoHeader field
+show TMUandGeneralInfo field
+show ClientProfile field
+show Tmu field
+show GeneralInfo field
+show Contacts field
+show ContactsTitle field
+show ToggleButtons field
+show ContactTableRow field
+show ContactTableCellSelect field
+show ContactTableCellInput field
+show FinancialInfo field
+show History field
+
+
+App -down- HomePage : protected-route
+App -down- ClientProfile : protected-route
+App -down- LogInPage : route
+
+LogInPage -down- RightPanel
+LogInPage -down- LeftPanel
+
+HomePageLayout -down- SidebarTablet
+HomePageLayout -down- SidebarCom
+HomePageLayout -down- Topbar
+HomePageLayout -down- WebSocketEventHandler
+HomePage -left- HomePageLayout
+
+SidebarCom -down- SidebarContent
+SidebarTablet -down- SidebarContent
+
+
+HomePage -down- UserManagementTab: route
+HomePage -down- ContactEditTab: route
+HomePage-down- AdvancedConfigPage: route
+
+ContactEditTab -right- ContactEditTabLayout
+ContactEditTabLayout -down- ClientListSection
+ClientListSection -down- ClientListTitle
+ClientListSection -down- ClientSearchbar
+ClientListSection -down- ClientList
+
+ContactEditTab -down- EditSection
+ContactEditTab -down- DefaultEditSection
+
+EditSection -down- ClientIntro
+EditSection -down- ModeTogglePanel
+EditSection -down- ContactList
+
+ClientIntro -down- ClientAvatar : clientName, avatarColor
+
+UserManagementTab -down- UserTableTogglePanel
+UserManagementTab -down- UserToggleButtons: user
+UserManagementTab -down- UserTableRow: user
+UserManagementTab -down- AddNewUserModal
+
+UserTableRow -down- UserTableCellSelect: id, options, name, editable
+UserTableRow -down- UserTableCellInput: name, editable
+UserTableRow -down- Status
+
+AddNewUserModal -down-AddNewUserModalBody
+
+AdvancedConfigPage -down- ConfigTemplateEditSection
+AdvancedConfigPage -down- VariableConfigTemplate: variableName, icon, variableIdx
+
+VariableConfigTemplate -down- VariableTitle: icon, variableName
+VariableConfigTemplate -down- VariablePropertyEdit: variableIdx
+
+ClientProfile -down- UnauthorizedPage
+ClientProfile -down- ClientNotFoundPage
+ClientProfile -down- ClientInfoHeader
+ClientProfile -down- TMUandGeneralInfo
+ClientProfile -down- Contacts: isEditable, tab(is at homepage)
+ClientProfile -down- FinancialInfo
+ClientProfile -down- History
+ClientProfile -down- RiskTable
+ClientProfile -down- DayEndLimitReport
+
+TMUandGeneralInfo -down- Tmu
+TMUandGeneralInfo -down- GeneralInfo
+
+Tmu -down- TmuAvatar: name
+Tmu -down- Memo: editable, memo, handleWriteMemo
+
+Contacts -down- ContactsTitle: tab(is at homepage)
+Contacts -down- ToggleButtons: contact
+Contacts -down- ContactTableRow: contact
+
+ContactTableRow -down- ContactTableCellInput: editable, id, name, error
+ContactTableRow -down- ContactTableCellSelect: editable, id, name, options
+
+@enduml
