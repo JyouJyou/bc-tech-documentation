@@ -1,11 +1,15 @@
 @startuml
 !include style.puml
 
-
+scale 0.8
 package bwcp {
     interface Server FACADE_COLOR {
         void onConnection(AuthPacket)
         void onDisconnection(FinPacket)
+        Optional<ComHistory> fetchComHistory(long startTime, long endTime, String username, String adminAor)
+        FetchCallResponse fetchCallingInfoFromCallResource(String callResource, String userAor)
+        boolean isSessionAlive(String aor)
+        boolean isWired()
     }
 
     class BwcpServer FACADE_COLOR {
@@ -33,6 +37,9 @@ package bwcp {
         package services SERVICE_COLOR {
             class MonitorResourceService SERVICE_COLOR
             class SessionService SERVICE_COLOR
+            class FetchComHistoryService SERVICE_COLOR
+            class CallResourceService SERVICE_COLOR
+            class EventService SERVICE_COLOR
         }
 
         package managers SERVICE_COLOR {
@@ -71,9 +78,10 @@ package bwcp {
         }
         class BwcpClientStorage STORAGE_COLOR
     }
-
-
+    interface ClientAction FACADE_COLOR
 }
+
+EventController -down[hidden]-services
 
 BwcpServer .up.|> Server
 XYZEventParsers .up.|> AbstractParser
@@ -88,5 +96,10 @@ XYZResponseParsers .down.> XYZResponse
 BwcpClientStorage .up.|> ClientStorage
 SessionManager ..> BwcpSession
 BwcpServer ..> SessionManager
+BwcpServer ..> FetchComHistoryService
+BwcpServer ..> CallResourceService
+EventService .up.> ClientAction
+BwcpServer ..> ClientAction
+EventController .up.> EventService
 
 @enduml
