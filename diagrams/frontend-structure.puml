@@ -20,15 +20,21 @@ skinparam class {
 
 'Overview Structure
 class App {
-    1. router
-    2. set configuration - on component rendered
-    3. <b><color:red>refresh JWT token - authWorkerInstance - every 80 min</color></b>
+    1. set configuration - on component rendered
 }
 
-class LogInPage
-class ClientProfile
+'ProtectdRoute
+class ProtectdRoute {
+    1. router    
+    2. <b><color:REDUX_COLOR>check if REDUX.JWTToken expired</color></b>
+    3. <b><color:red>check if cookie.JWTToken expired - API: /checkJWTToken</color></b>
+    4. try set <b><color:red>cookie.JWTToken</color></b> and <b><color:REDUX_COLOR>REDUX.JWTToken</color></b> by cookie.user/pwd <b><color:red>API required</color></b>
+}
 
 'LogInPage
+class LogInPage {
+    1. Redirect to /homepage if <b><color:REDUX_COLOR>REDUX.JWTToken Exist</color></b>
+}
 class LeftPanel
 class RightPanel {
     1. <b><color:red>authenticate - /login</color></b>
@@ -41,7 +47,9 @@ class RightPanel {
 'HomePage
 class HomePage {
     1. Switch between tabs
-    2. tab information - pageUtils - pages
+    2. tab information - pageUtils - pages   
+    3. Redirect to LoginPage if <b><color:REDUX_COLOR>REDUX JWTToken not exist</color></b>
+    4. <b><color:red>refresh JWT token - authWorkerInstance - every 80 min</color></b>
 }
     class HomePageLayout
         class SidebarTablet {
@@ -152,6 +160,7 @@ class HomePage {
                 }
 
 class ClientProfile {
+    * Directly close window <b><color:REDUX_COLOR>If states.JWTToken Not Exist</color></b>
     1. <b><color:red>authenticate on component rendered - /user/auth
     2. set configuration - on component rendered
     3. <b><color:red>fetch client profile data - /user/client-profile</color></b>
@@ -262,10 +271,15 @@ show ContactTableCellInput field
 show FinancialInfo field
 show History field
 
+show ProtectdRoute field
+show LogInPage field
 
-App -down- HomePage : protected-route
-App -down- ClientProfile : protected-route
-App -down- LogInPage : route
+
+App -down- ProtectdRoute
+
+ProtectdRoute -down- HomePage: route
+ProtectdRoute -down- ClientProfile: route
+ProtectdRoute -down- LogInPage: route
 
 LogInPage -down- RightPanel
 LogInPage -down- LeftPanel
