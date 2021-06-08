@@ -150,7 +150,6 @@ class HomePage {
                 class VariablePropertyEdit {
                     1. <b><color:red>save variable based on variableIdx - admin/update-config-param
                 }
-
 class ClientProfile {
     1. <b><color:red>authenticate on component rendered - /user/auth
     2. set configuration - on component rendered
@@ -311,7 +310,8 @@ UserTableRow -down- Status
 AddNewUserModal -down-AddNewUserModalBody
 
 AdvancedConfigPage -down- ConfigTemplateEditSection
-AdvancedConfigPage -down- VariableConfigTemplate: variableName, icon, variableIdx
+AdvancedConfigPage -down- VariableConfigSection
+VariableConfigSection -down- VariableConfigTemplate: variableName, icon, variableIdx
 
 VariableConfigTemplate -down- VariableTitle: icon, variableName
 VariableConfigTemplate -down- VariablePropertyEdit: variableIdx
