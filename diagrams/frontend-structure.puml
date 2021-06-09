@@ -50,11 +50,11 @@ class HomePage {
     2. tab information - pageUtils - pages   
     3. Redirect to LoginPage if <b><color:REDUX_COLOR>REDUX JWTToken not exist</color></b>
     4. <b><color:red>refresh JWT token - authWorkerInstance - every 80 min</color></b>
+    5. Decide which ROLE could see what Components
 }
 
-class Admin {
-    1. <b><color:REDUX_COLOR>states.JWTToken Not Exist: render failed page.
-    2. <b><color:REDUX_COLOR>states.role != admin: render permission denied page.
+class UserManagementTab {
+    1. TODO LIST, put components from UserTab.
 }
 
     class HomePageLayout
@@ -78,8 +78,7 @@ class Admin {
 
     'HomePage Main Body
     class ContactEditTab{
-        1. <b><color:REDUX_COLOR>states.JWTToken Not Exist: render failed page.
-        2. <b><color:REDUX_COLOR>states.role != user: render permission denied page.
+        
     }
         class ContactEditTabLayout
             class ClientListSection
@@ -114,12 +113,11 @@ class Admin {
                 1. reuse <b><color:red>Contacts</color></b> component
             }
         class DefaultEditSection
-    class UserManagementTab {
+    class UserTab {
         1. <b><color:red>fetch all users - /admin/trader</color></b> and store at <b><color:REDUX_COLOR>users
         2. row information - userManagementUtils - userManagementInformationList
         3. <b><color:REDUX_COLOR>userManagementSlice: users
-        4. <b><color:REDUX_COLOR>states.JWTToken Not Exist: render failed page.
-        5. <b><color:REDUX_COLOR>states.role != user: render permission denied page.
+        4. TODO LIST, take out components which should belongs to UserManagementTab, keep view part only.
     }
         class UserTableTogglePanel {
             1. set <b><color:REDUX_COLOR>shouldOpenUserModal</color></b> on add button clicked
@@ -153,9 +151,7 @@ class Admin {
     class AdvancedConfigPage {
         1. tab information - configurationUtils - advancedConfigurationList
         2. set <b><color:REDUX_COLOR>snippetType</color></b> based on tab clicked
-        3. <b><color:REDUX_COLOR>configurationPageSlice: snippetType
-        4. <b><color:REDUX_COLOR>states.JWTToken Not Exist: render failed page.
-        5. <b><color:REDUX_COLOR>states.role != user: render permission denied page.
+        3. <b><color:REDUX_COLOR>configurationPageSlice: snippetType 
     }
         class ConfigTemplateEditSection {
             1. <b><color:red>fetch template based on <b><color:REDUX_COLOR>snippetType</color></b> <b><color:red>- /admin/fetch-template
@@ -173,8 +169,14 @@ class Admin {
     class CommunicationHistory {
         1. <b><color:red>API call histroy</color></b>
         2. <b><color:red>websocket</color></b>
-        3. <b><color:REDUX_COLOR>states.JWTToken Not Exist: render failed page.</color></b>
-        4. <b><color:REDUX_COLOR>states.role != user: render permission denied page.
+        3. Local state would store all com-history while first render
+        4. Then update history by response of websocket
+    }
+    class SearchBarForFilter {
+
+    }
+    class HistoryDisplayBlock {
+
     }
 
 class ClientProfile {
@@ -264,7 +266,7 @@ show ClientIntro field
 show ModeTogglePanel field
 show ContactList field
 show HomePage field
-show UserManagementTab field
+show UserTab field
 show UserTableTogglePanel field
 show UserToggleButtons field
 show UserTableRow field
@@ -293,7 +295,7 @@ show ProtectdRoute field
 show LogInPage field
 show CommunicationHistory field
 show ContactEditTab field
-show Admin field
+show UserManagementTab field
 
 App -down- ProtectdRoute
 
@@ -314,11 +316,10 @@ SidebarCom -down- SidebarContent
 SidebarTablet -down- SidebarContent
 
 
-HomePage -down- UserManagementTab: route
-HomePage -down- ContactEditTab: route
-HomePage-down- AdvancedConfigPage: route
-HomePage -down- CommunicationHistory: route
-HomePage -down- Admin: route
+HomePage -down- UserTab: route - USER, GROUP_LEADER
+HomePage -down- ContactEditTab: route - USER, GROUP_LEADER
+HomePage -down- CommunicationHistory: route - USER, GROUP_LEADER
+HomePage -down- UserManagementTab: route - ADMIN
 
 ContactEditTab -right- ContactEditTabLayout
 ContactEditTabLayout -down- ClientListSection
@@ -333,12 +334,15 @@ EditSection -down- ClientIntro
 EditSection -down- ModeTogglePanel
 EditSection -down- ContactList
 
+CommunicationHistory -down- HistoryDisplayBlock
+CommunicationHistory -down- SearchBarForFilter
+
 ClientIntro -down- ClientAvatar : clientName, avatarColor
 
-UserManagementTab -down- UserTableTogglePanel
-UserManagementTab -down- UserToggleButtons: user
-UserManagementTab -down- UserTableRow: user
-UserManagementTab -down- AddNewUserModal
+UserTab -down- UserTableTogglePanel
+UserTab -down- UserToggleButtons: user
+UserTab -down- UserTableRow: user
+UserTab -down- AddNewUserModal
 
 UserTableRow -down- UserTableCellSelect: id, options, name, editable
 UserTableRow -down- UserTableCellInput: name, editable
