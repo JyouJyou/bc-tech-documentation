@@ -1,0 +1,77 @@
+@startuml
+
+participant Controller
+participant BwcpClientAction
+participant LicenseStorage
+participant LicenseService
+participant ReportService
+
+autoactivate on
+
+Controller -> LicenseService : importLicense(xml)
+LicenseService -> LicenseService : check xml validation
+
+alt license not validate
+  LicenseService -> ReportService : Error message record
+  ReportService --> LicenseService : return
+  LicenseService --> Controller : null
+else 
+  LicenseService -> LicenseService : ReplaceLocalLicenseFile
+  LicenseService --> LicenseService : true
+  LicenseService --> Controller : licenseList
+  Controller -> BwcpClientAction : refreshLicenseStorage
+  BwcpClientAction -> LicenseStorage : refreshStorage
+
+  loop iter
+  LicenseStorage -> LicenseService : refresh
+  LicenseService -> LicenseService : refreshTargetLicense
+
+    alt refresh success
+      LicenseService --> LicenseStorage : true
+    else failed
+      LicenseService --> LicenseStorage : false
+      LicenseStorage -> LicenseStorage : drop this license
+      LicenseStorage --> LicenseStorage : true
+    end
+
+  end
+
+  LicenseStorage --> BwcpClientAction : true
+  BwcpClientAction --> Controller : true
+end
+
+
+
+BwcpClientAction -> LicenseStorage : fetchLicenseByAor(aor)
+
+alt license exist in LicenseStorage
+  LicenseStorage --> BwcpClientAction : license
+
+else license not exist
+  LicenseStorage -> LicenseService : fetchLicenseByParsingXml(String aor)
+  LicenseService -> LicenseService : check xml validation
+
+  alt license not validate
+    LicenseService -> ReportService : Error message record
+    ReportService --> LicenseService : return
+    LicenseService --> LicenseStorage : null
+    LicenseStorage --> BwcpClientAction : null
+
+  else license accept
+    LicenseService -> LicenseService : fetch license by aor
+
+    alt license with aor exist
+      LicenseService --> LicenseStorage : license
+      LicenseStorage --> BwcpClientAction : license
+
+    else
+      LicenseService -> ReportService : Error message record
+      ReportService --> LicenseService : return
+      LicenseService --> LicenseStorage : null
+      LicenseStorage --> BwcpClientAction : null
+    end
+
+  end
+
+end
+@enduml
