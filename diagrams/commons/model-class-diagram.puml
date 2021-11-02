@@ -1,0 +1,49 @@
+@startuml
+
+package model{
+  package commons {
+    class BcTecLog{
+      LogType
+      int Severity
+      Date datetime
+      String Description
+    }
+    class BwcpSession{
+      int bwcpSession = 60minutes
+      int bwcpSessionSlice = 1minutes
+      refreshTime = 0
+
+      BwcpSessionState sessionState
+      boolean exit
+      int cumulativeSession
+      AuthPacket sessionOwner
+      Thread session
+      String sessionToken
+      String monitorResource
+
+    }
+    class BwcpLicense{
+      boolean Incoming
+      boolean Outgoing
+      boolean Pickup
+      boolean Trasfer
+      boolean BargeIn
+      boolean Comhistory
+    }
+    package packets{
+      class AuthPacket{
+        String username
+        String aor
+        String did
+        String bwUsername
+        String bwPassword
+        String localDisplayName
+        String role
+      }
+    }
+  }
+}
+
+BwcpSession --> AuthPacket
+
+@enduml

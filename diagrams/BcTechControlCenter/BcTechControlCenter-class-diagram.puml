@@ -11,7 +11,8 @@ package bc-tech-backend{
     class ControlCenterService{
       Map<String, BwcpSession> SessionPool
       Map<String, BwcpLicense> LicensePool
-      BwClientStorage bwClientStorage
+      SessionPoolService
+      LicensePoolService
 
       onIncomingLineStatusEvent()
       onOriginatedEvent()
@@ -78,19 +79,16 @@ package bc-tech-backend{
       class BwcpLicense{
 
       }
-      class BwClientStorage{
-
-      }
     }
   }
 }
 
-ControlCenterController <.. ControlCenterService
-ControlCenterService <.. SessionPoolService
-ControlCenterService <.. LicensePoolService
-ControlCenterController <.. LogService
-SmtpController <.. SmtpService
-AuthController <.. AuthService
+ControlCenterController --> ControlCenterService
+ControlCenterService --> SessionPoolService
+ControlCenterService --> LicensePoolService
+ControlCenterController --> LogService
+SmtpController --> SmtpService
+AuthController --> AuthService
 
 LogService .. SmtpController
 AuthService .. ControlCenterController
