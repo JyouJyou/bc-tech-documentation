@@ -1,0 +1,77 @@
+@startuml
+!include ../style.puml
+
+package Controller {
+    class LicenseController {
+        ResponseEntity importLicense(XML)
+    }
+}
+
+package model{
+
+    package license {
+        class License {
+            String aor
+
+            Map<Type, Boolean> functionScenarios
+            Boolean isValid() throw LicenseExpirationException;
+        }
+
+
+        Enum LicenseType {
+            INCOMING, OUTGOING, PICKUP, BARGEIN, TRANSFER
+        }
+    }
+}
+
+package service{
+
+    class LicenseService {
+        Boolean isLicensed(LicenseType type, Aor aor)
+        private Map<Aor, License> readLicense(String path) throw InvalidContentException, InvalidCertificateException;
+        public List<License> storeLicense(XML) throw InvalidFormatException, InvalidCertificateException, MissingException, Exception;
+        private boolean isXmlLicenseValidity(XML)
+    }
+
+
+}
+
+package ControlCenter {
+
+    class ControlCenter {
+        SessionManager
+        LicenseService
+    }
+}
+
+class BwcpClientAction {
+
+}
+
+package commons {
+    package utils {
+        class FileUtil {
+            void storeXml(FileInputStream)
+        }
+    }
+}
+
+
+class JwtUtils {
+generateToken(List<License>, subject, role) (update)
+
+}
+
+class AuthService {
+generateResponse() (update)
+}
+
+BwcpClientAction -> LicenseService
+LicenseController -> LicenseService
+LicenseService ..> License
+
+
+
+
+
+@enduml
