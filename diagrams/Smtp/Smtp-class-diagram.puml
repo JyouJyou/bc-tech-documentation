@@ -1,0 +1,68 @@
+@startuml
+
+class SomeWhereService {
+
+  void sendEmail(BcTechLog)
+}
+
+package Report {
+
+  class ReportService {
+    
+    String content
+
+    void generateEmailContent(BcTechLog)
+    void sendEmail(String content)
+  }
+  note right: Responseble for MailService/LogService Async exception
+
+  class MailService {
+
+    JavaMailSenderImpl mailSender
+
+    void init()
+    void sendMail(String Content) -> Async
+  }
+  note right: Async send mail to target account. Prevent thread stuck.
+
+  class LogService {
+    void saveLog(BcTechLog)
+    String generateLog(BcTechLog)
+    void save(LogLevel)
+  }
+  enum LogLevel {
+
+  }
+}
+
+package resources {
+  class admin {
+
+  }
+  class mail {
+
+  }
+}
+
+package configuration {
+  class AdminConfig {
+
+  }
+  class MailConfig {
+
+  }
+}
+
+SomeWhereService --> ReportService
+ReportService --> MailService
+ReportService --> LogService
+
+MailService --> MailConfig
+MailService --> AdminConfig
+
+MailConfig .. mail
+AdminConfig .. admin
+
+LogService .. LogLevel
+
+@enduml
