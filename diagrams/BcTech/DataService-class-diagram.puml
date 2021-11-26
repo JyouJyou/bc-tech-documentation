@@ -1,0 +1,34 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package logic.service SERVICE_COLOR {
+  class UserService SERVICE_COLOR {}
+  class ConfigService SERVICE_COLOR {}
+}
+
+package repository {
+  class UserRepository {}
+  class UserAuthRepository {}
+  class CounterPartyRepository {}
+  class TelRecordRepository {}
+  class CntrpCreditRepository{}
+  class MemoRepository{}
+  class EntTraderRepository{}
+  class PsrRepository{}
+  class SelectionListRepository{}
+}
+
+DataService ..> UserService
+DataService ..> ConfigService
+DataService ..> UserRepository
+DataService ..> TelRecordRepository
+DataService ..> CounterPartyRepository
+DataService ..> CntrpCreditRepository
+DataService ..> UserAuthRepository
+DataService ..> MemoRepository
+DataService ..> EntTraderRepository
+DataService ..> PsrRepository
+DataService ..> SelectionListRepository
+
+@enduml

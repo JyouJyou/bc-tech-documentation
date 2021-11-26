@@ -1,0 +1,26 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package controller {
+  class DataController {}
+}
+
+package logic.service SERVICE_COLOR {
+  class ConfigService SERVICE_COLOR {}
+  class DataService SERVICE_COLOR {}
+}
+
+package bwcp {
+  package logic.services SERVICE_COLOR {
+    class BasicService SERVICE_COLOR {}
+  }
+}
+
+DataController ..> DataService
+DataController ..> BasicService
+DataController ..> ConfigService
+
+BasicService ..> ConfigService
+
+@enduml

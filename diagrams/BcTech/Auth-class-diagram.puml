@@ -1,0 +1,57 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package controller {
+  class AuthController{}
+}
+
+package bwcp {
+
+  interface Server {}
+
+  class BwcpServer {}
+
+  package logic.services SERVICE_COLOR {
+    class BasicService SERVICE_COLOR {}
+  }
+}
+
+package logic.service SERVICE_COLOR {
+  class AuthService SERVICE_COLOR {}
+  class ConfigService SERVICE_COLOR {}
+  class UserService SERVICE_COLOR {}
+}
+
+package repository {
+  class UserRepository {}
+  class UserAuthRepository {}
+}
+
+package commons {
+  package service.report SERVICE_COLOR {
+    class ReportService SERVICE_COLOR {}
+  }
+}
+
+AuthController ..> BasicService
+AuthController ..> AuthService
+
+
+
+BasicService ..> ConfigService
+
+AuthService ..> UserRepository
+AuthService ..> UserAuthRepository
+AuthService ..> UserService
+AuthService ..> ConfigService
+AuthService ..> ReportService
+AuthService ..> BwcpServer
+
+UserService ..> UserRepository
+UserService ..> UserAuthRepository
+UserService ..> ReportService
+
+BwcpServer ..|> Server
+
+@enduml

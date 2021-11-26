@@ -1,0 +1,15 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package controller {
+  class ConfigPageController {}
+}
+
+package logic.service SERVICE_COLOR {
+  class ConfigService SERVICE_COLOR {}
+}
+
+ConfigPageController ..> ConfigService
+
+@enduml

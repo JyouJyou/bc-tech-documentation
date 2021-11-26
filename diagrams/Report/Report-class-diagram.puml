@@ -1,0 +1,60 @@
+@startuml
+
+class SomeWhereService {
+
+  void sendReport(Log)
+}
+
+package Report {
+
+  class ReportService {
+    
+    List logs
+
+    sendReport(Log)
+    sendDailyReport()
+  }
+  note right: Responseble for SmtpService/LogService Async exception
+
+  class SmtpService {
+
+    JavaMailSenderImpl mailSender
+
+    init()
+    sendMail(String Content) -> Async
+    sendErrorReport(Log)
+    sendWarnReport(Log)
+    sendDailyReport(Log)
+    parseLogToEmailFormat(Log)
+    parseLogToEmailFormat(List Log)
+    formatLog(List log)
+  }
+  note right: Async send mail to target account. Prevent thread stuck.
+
+  class LogService {
+    Logger logger
+    logHandler(Log)
+  }
+}
+
+package configuration {
+  class application_properties {
+
+  }
+  class ReportConfig {
+
+  }
+}
+
+SomeWhereService --> ReportService
+ReportService --> SmtpService
+ReportService --> LogService
+ReportService --> ReportConfig
+ReportService --> application_properties
+
+SmtpService --> ReportConfig
+SmtpService --> LogService
+
+LogService --> ReportConfig
+
+@enduml

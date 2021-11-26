@@ -1,0 +1,146 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package controller {
+  class AuthController{}
+  class ConfigPageController {}
+  class ContactController {}
+  class DataController {}
+  class DefaultController {}
+  class TemplateController {}
+  class TurretController {}
+  class UserController {}
+}
+
+package bwcp {
+
+  interface Server {}
+
+  class BwcpServer {}
+
+  package logic.services SERVICE_COLOR {
+    class BasicService SERVICE_COLOR {}
+    class SessionService SERVICE_COLOR {}
+    class MonitorResourceService SERVICE_COLOR {}
+  }
+}
+
+package logic.service SERVICE_COLOR {
+  class AuthService SERVICE_COLOR {}
+  class UserService SERVICE_COLOR {}
+  class ConfigService SERVICE_COLOR {}
+  class ContactService SERVICE_COLOR {}
+  class DataService SERVICE_COLOR {}
+  class MyUserDetailService SERVICE_COLOR {}
+}
+
+package repository {
+  class UserRepository {}
+  class UserAuthRepository {}
+  class ContactRepository {}
+  class CounterPartyRepository {}
+  class TelRecordRepository {}
+  class CntrpCreditRepository{}
+  class MemoRepository{}
+  class EntTraderRepository{}
+  class PsrRepository{}
+  class SelectionListRepository{}
+}
+
+package commons {
+  package service.report SERVICE_COLOR {
+    class ReportService SERVICE_COLOR {}
+    class SmtpSerivce SERVICE_COLOR {}
+    class LogService SERVICE_COLOR {}
+  }
+  package config {
+    class ReportConfig {}
+  }
+}
+
+package security {
+  class JwtFilter {}
+  class SecurityConfig {}
+}
+
+AuthController ..> BasicService
+AuthController ..> AuthService
+
+ConfigPageController ..> ConfigService
+
+DataController ..> DataService
+DataController ..> BasicService
+DataController ..> ConfigService
+
+TemplateController ..> BasicService
+TemplateController ..> ReportService
+
+TurretController ..> BasicService
+TurretController ..> BwcpServer
+TurretController ..> UserService
+
+UserController ..> UserService
+UserController ..> BasicService
+
+AuthService ..> UserRepository
+AuthService ..> UserAuthRepository
+AuthService ..> UserService
+AuthService ..> ConfigService
+AuthService ..> ReportService
+AuthService ..> BwcpServer
+
+
+
+BasicService ..> ConfigService
+
+ConfigService ..> ReportService
+
+UserService ..> UserRepository
+UserService ..> UserAuthRepository
+UserService ..> ReportService
+
+ReportService ..> LogService
+ReportService ..> SmtpSerivce
+ReportService ..> ReportConfig
+
+SmtpSerivce ..> LogService
+SmtpSerivce ..> ReportConfig
+
+LogService ..> ReportConfig
+
+SessionService ..> BasicService
+SessionService ..> ConfigService
+SessionService ..> ReportService
+
+ContactService ..> ContactRepository
+ContactService ..> CounterPartyRepository
+
+DataService ..> UserService
+DataService ..> ConfigService
+DataService ..> UserRepository
+DataService ..> TelRecordRepository
+DataService ..> CounterPartyRepository
+DataService ..> CntrpCreditRepository
+DataService ..> UserAuthRepository
+DataService ..> MemoRepository
+DataService ..> EntTraderRepository
+DataService ..> PsrRepository
+DataService ..> SelectionListRepository
+
+MyUserDetailService ..> UserRepository
+MyUserDetailService ..|> UserDetailService
+
+JwtFilter ..> BasicService
+JwtFilter ..> MyUserDetailService
+JwtFilter ..> ReportService
+
+SecurityConfig ..> UserRepository
+SecurityConfig ..> SessionService
+SecurityConfig ..> MonitorResourceService
+SecurityConfig ..> ConfigService
+SecurityConfig ..> MyUserDetailService
+
+BwcpServer ..|> Server
+
+@enduml

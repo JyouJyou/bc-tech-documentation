@@ -1,0 +1,51 @@
+@startuml
+!include ../style.puml
+
+scale 0.8
+package controller {
+  class ContactController {}
+}
+
+package logic.service SERVICE_COLOR {
+  class ContactService SERVICE_COLOR {}
+  class DataService SERVICE_COLOR {}
+  class UserService SERVICE_COLOR {}
+  class ConfigService SERVICE_COLOR {}
+}
+
+package bwcp {
+  package logic.services SERVICE_COLOR {
+    class BasicService SERVICE_COLOR {}
+  }
+}
+
+package commons {
+  package service.report SERVICE_COLOR {
+    class ReportService SERVICE_COLOR {}
+  }
+}
+
+package repository {
+  class UserRepository {}
+  class UserAuthRepository {}
+  class ContactRepository {}
+  class CounterPartyRepository {}
+}
+
+
+ContactController ..> ContactService
+ContactController ..> DataService
+ContactController ..> BasicService
+
+ContactService ..> ContactRepository
+ContactService ..> CounterPartyRepository
+
+
+
+BasicService ..> ConfigService
+
+UserService ..> UserRepository
+UserService ..> UserAuthRepository
+UserService ..> ReportService
+
+@enduml
